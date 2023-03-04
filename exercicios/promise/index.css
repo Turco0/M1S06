@@ -1,0 +1,20 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+body {
+  background-color: #111111;
+
+  text-align: left;
+  color: white;
+}
+
+body > div {
+  padding: 2rem;
+}
+
+body > div > * {
+  margin-top: 0.25rem;
+}
