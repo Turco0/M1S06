@@ -31,57 +31,15 @@ function showCepData(response) {
 // conteúdos da aulas
 // ---------------
 // escopo síncrono
-async function delayPromise() {
-  // comando de espera
-  await new Promise((res) => setTimeout(res, 1000));
-  // executa após conclusão de delay
-  console.log('Escopo síncrono');
-}
+async function delayPromise() {}
 
 // escopo assíncrono
-function callDelayPromise() {
-  delayPromise();
-  // imprime primeiro no console
-  console.log('Escopo assíncrono');
-}
+function callDelayPromise() {}
 
-const fetchCep = (cep) => {
-  return fetch(`https://viacep.com.br/ws/${cep}/json`).then((res) =>
-    res.json()
-  );
-};
+const fetchCep = (cep) => {};
 
-const showPhotosWithLimit = async () => {
-  photosLimit = Number(document.getElementById('photos-input').value);
+const showPhotosWithLimit = async () => {};
 
-  const photos = await fetch(
-    `https://jsonplaceholder.typicode.com/photos?_page=1&_limit=${photosLimit}`
-  ).then((res) => res.json());
+async function showCEP() {}
 
-  createPhotosList(photos, 'photos-limit-response');
-};
-
-async function showCEP() {
-  const inputCepValue = document.getElementById('cep-input').value;
-  const cepResponse = await fetchCep(inputCepValue);
-
-  console.log(cepResponse);
-  showCepData(cepResponse);
-}
-
-async function getPaginatedPhotos() {
-  const getMorePhotosButton = document.getElementById('get-more-photos-button');
-
-  getMorePhotosButton.style.display = 'none';
-
-  const res = await fetch(
-    `https://jsonplaceholder.typicode.com/photos?_page=${currentPhotosPage}&_limit=${photosLimit}`
-  ).then((res) => res.json());
-
-  if (res.length === Number(photosLimit)) {
-    getMorePhotosButton.style.display = 'block';
-    currentPhotosPage++;
-  }
-
-  createPhotosList(res, 'photos-wrapper');
-}
+async function getPaginatedPhotos() {}

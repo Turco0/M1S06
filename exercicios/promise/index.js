@@ -9,70 +9,22 @@ function createBankList(banks) {
 
 // ---------------------------
 // Criando uma promessa
-const firstPromise = new Promise((resolve, reject) => {
-  const nome = 'dany';
-
-  if (nome == 'dany') {
-    resolve('Usuário encontrado');
-  } else {
-    reject('O usuário não foi encontrado');
-  }
-});
 
 // ---------------------------
 // Criando Promise com reject
-const promisseError = (isSuccess = false) =>
-  new Promise((resolve, reject) => {
-    if (isSuccess) {
-      resolve('Não vai entrar haha');
-    } else {
-      reject('Entrei no reject. Erro X');
-    }
-  });
+const promisseError = () => {};
 
 // Encadeando then's
-const responseToJson = (cep) => {
-  return fetch(`https://viacep.com.br/ws/${cep}/json`)
-    .then((res) => res.json())
-    .then((data) => data);
-};
+const responseToJson = (cep) => {};
 
 // ---------------------------
 // Método catch
-const fetchCep = (cep) => {
-  return fetch(`https://viacep.com.br/ws/${cep}/json`)
-    .then((res) => res.json())
-    .then((data) => data)
-    .catch((err) => err);
-};
+const fetchCep = (cep) => {};
 
-function getBanksInBrasil() {
-  return fetch('https://brasilapi.com.br/api/banks/v1')
-    .then((res) => res.json())
-    .then((data) => createBankList(data))
-    .catch((err) => console.error(err));
-}
+function getBanksInBrasil() {}
 
-function successPromise() {
-  firstPromise.then((data) => console.log(data));
-}
+function errorPromise() {}
 
-function errorPromise() {
-  promisseError()
-    .then((response) => console.log(response))
-    .catch((error) => console.error(error));
-}
+function promiseAll() {}
 
-function promiseAll() {
-  Promise.all([firstPromise, fetchCep, responseToJson])
-    .then((data) => console.log(data))
-    .catch((error) => console.error(error))
-    .finally(() => console.log('finally'));
-}
-
-function promiseRace() {
-  Promise.race([firstPromise, fetchCep, responseToJson])
-    .then((data) => console.log(data))
-    .catch((error) => console.error(error))
-    .finally(() => console.log('finally'));
-}
+function promiseRace() {}
