@@ -5,14 +5,40 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./index.css" />
+    <link rel="stylesheet" href="../../styles/header.css" />
     <title>Async/Await</title>
   </head>
   <body>
-    <div>
-      <h1>Async/Await</h1>
-      <h4>Módulo 1 - Semana 6: Aula 2</h4>
+    <header>
+      <a href="/index.html" id="page-link" class="go-back">
+        <img src="/images/arrow-left.svg" alt="Voltar" /> Voltar</a
+      >
 
-      <h1>😁</h1>
+      <div>
+        <h3>Async/Await</h3>
+        <p>Módulo 1 - Semana 6: Aula 2</p>
+      </div>
+    </header>
+    <div class="page-wrapper">
+      <button class="exercice-button" onclick="callDelayPromise()">
+        Escopo síncrono e assíncrono
+      </button>
+
+      <div class="input-wrapper">
+        <label for="CEP"> Insira seu CEP</label>
+        <input type="number" name="CEP" id="cep-input" />
+        <button class="exercice-button" onclick="getCEP()">Buscar</button>
+      </div>
+
+      <button class="exercice-button" onclick="fetchPhotos()">
+        Criar lista de fotos
+      </button>
+
+      <div id="photos-wrapper"></div>
+
+      <button id="get-more-photos-button" onclick="fetchPhotos()">
+        Carregar mais fotos
+      </button>
     </div>
     <script src="index.js"></script>
   </body>

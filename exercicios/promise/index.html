@@ -5,14 +5,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./index.css" />
+    <link rel="stylesheet" href="../../styles/header.css" />
     <title>Promises</title>
   </head>
   <body>
-    <div>
-      <h1>Promises</h1>
-      <h4>Módulo 1 - Semana 6: Aula 1</h4>
+    <header>
+      <a href="/index.html" id="page-link" class="go-back">
+        <img src="/images/arrow-left.svg" alt="Voltar" /> Voltar</a
+      >
 
-      <h1>😁</h1>
+      <div>
+        <h3>Promises</h3>
+        <p>Módulo 1 - Semana 6: Aula 1</p>
+      </div>
+    </header>
+    <div class="page-wrapper">
+      <button id="exercice-button" onclick="successPromise()">
+        Promise com sucesso
+      </button>
+      <button id="exercice-button" onclick="errorPromise()">
+        Promise com erro
+      </button>
+      <button id="exercice-button" onclick="promiseAll()">Promise all</button>
+      <button id="exercice-button" onclick="promiseRace()">Promise race</button>
+      <button id="exercice-button" onclick="getBanksInBrasil()">
+        Criar lista de bancos
+      </button>
     </div>
     <script src="index.js"></script>
   </body>

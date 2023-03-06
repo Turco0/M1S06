@@ -1,0 +1,35 @@
+header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  padding: 1rem 0;
+  background-color: #414141;
+}
+
+header .go-back {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-decoration: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+header img {
+  width: 15px;
+  margin-right: 0.5rem;
+}
+
+header a {
+  text-decoration: none;
+  color: white;
+}
+
+header p {
+  margin-top: 0.25rem;
+  color: #d0d0d0;
+}
