@@ -9,6 +9,7 @@ function createBankList(banks) {
 
 // ---------------------------
 // Criando uma promessa
+const successPromise = () => {};
 
 // ---------------------------
 // Criando Promise com reject
@@ -22,6 +23,8 @@ const responseToJson = (cep) => {};
 const fetchCep = (cep) => {};
 
 function getBanksInBrasil() {}
+
+function getCep() {}
 
 function errorPromise() {}
 
