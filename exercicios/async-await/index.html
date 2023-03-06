@@ -24,19 +24,37 @@
         Escopo síncrono e assíncrono
       </button>
 
-      <div class="input-wrapper">
-        <label for="CEP"> Insira seu CEP</label>
-        <input type="number" name="CEP" id="cep-input" />
-        <button class="exercice-button" onclick="getCEP()">Buscar</button>
+      <div class="show-response">
+        <div class="input-wrapper">
+          <label for="photos">
+            Insira a quantidade de fotos que você deseja carregar</label
+          >
+          <input type="number" name="photos" id="photos-input" />
+          <button class="exercice-button" onclick="showPhotosWithLimit()">
+            Buscar
+          </button>
+        </div>
+
+        <div id="photos-limit-response"></div>
       </div>
 
-      <button class="exercice-button" onclick="fetchPhotos()">
+      <div class="show-response">
+        <div class="input-wrapper">
+          <label for="CEP"> Insira seu CEP</label>
+          <input type="number" name="CEP" id="cep-input" />
+          <button class="exercice-button" onclick="showCEP()">Buscar</button>
+        </div>
+
+        <div id="cep-response"></div>
+      </div>
+
+      <button class="exercice-button" onclick="getPaginatedPhotos()">
         Criar lista de fotos
       </button>
 
       <div id="photos-wrapper"></div>
 
-      <button id="get-more-photos-button" onclick="fetchPhotos()">
+      <button id="get-more-photos-button" onclick="getPaginatedPhotos()">
         Carregar mais fotos
       </button>
     </div>

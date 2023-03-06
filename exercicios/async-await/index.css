@@ -48,14 +48,16 @@ body {
   padding: 0.25rem 0.5rem;
 }
 
-#photos-wrapper {
+#photos-wrapper,
+#photos-limit-response {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 1rem;
   padding: 1rem;
 }
 
-#photos-wrapper img {
+#photos-wrapper img,
+#photos-limit-response img {
   max-width: 100%;
 }
 
