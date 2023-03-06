@@ -15,6 +15,10 @@ body {
   padding: 2rem;
 }
 
+.section-title {
+  margin: 2rem 0 0;
+}
+
 #exercice-button {
   text-decoration: none;
   color: white;
@@ -37,4 +41,10 @@ body {
 
 #bank > * {
   margin-top: 0.25rem;
+}
+
+#advanced-examples {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
