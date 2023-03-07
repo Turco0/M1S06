@@ -7,64 +7,89 @@ function createBankList(banks) {
   });
 }
 
-
-const primeiraPromise = new Promise((resolve, reject) => {
-const a = true;
-
-if (a) {
-  resolve("a")
-}else{
-  reject("Não a")
-}
-})
-
-const segundaPromise = new Promise((resolve, reject) => {
-  const b = true;
-  if (b) {
-    resolve("b")
-  }else{
-    reject("Não b")
-  }
-
-})
-
-const terceiraPromise = new Promise((resolve, reject) => {
-  const c = true;
-
-  if (c) {
-    resolve("c")
-  }else{
-    reject("Não c")
-  }
-})
-
-
 // ---------------------------
 // Criando uma promessa
-const successPromise = () => {};
+const myPromise = new Promise((resolve, reject) => {
+  const turma = 'Itacorubi';
 
-// ---------------------------
-// Criando Promise com reject
-const promisseError = () => {};
+  if (turma === 'Itacorubi') {
+    resolve('Você faz parte da turma Itacorubi');
+  } else {
+    reject('Infelizmente você não faz parte da turma Itacorubi');
+  }
+});
+
+const successPromise = () => {
+  myPromise
+    .then((response) => console.log(response))
+    .catch((err) => console.error(err));
+};
+
+// Promise com delay
+const lazyPromise = new Promise((resolve, reject) => {
+  setTimeout(() => resolve('Lazy Promise'), 2000);
+});
+
+// Promise sem delay
+const fastPromise = new Promise((resolve, reject) => {
+  setTimeout(() => resolve('Fast Promise'), 1000);
+});
+
+// Promise retorna nome
+const namePromise = new Promise((resolve, reject) => {
+  resolve('Sérgio');
+});
 
 // Encadeando then's
-const responseToJson = (cep) => {};
+const responseToJson = (cep) => {
+  return fetch(`https://viacep.com.br/ws/${cep}/json`)
+    .then((res) => res.json())
+    .then((data) => data);
+};
 
 // ---------------------------
-// Método catch
-const fetchCep = (cep) => {};
+// Método fetch
+const fetchCep = (cep) => {
+  return fetch(`https://viacep.com.br/ws/${cep}/json`)
+    .then((res) => res.json())
+    .then((data) => data)
+    .catch((err) => err);
+};
 
-function getBanksInBrasil() {}
-
-function getCep() {}
-
-function errorPromise() {}
-
-function promiseAll() {
-  Promise.all([primeiraPromise, segundaPromise, terceiraPromise])
-  .then((resolve)=>{console.log(resolve)})
-  .catch((reject)=>{console.error(reject)})
-  .finally(()=>{console.log("Finalizou")})
+function fetchBanksInBrazil() {
+  return fetch('https://brasilapi.com.br/api/banks/v1')
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
 }
 
-function promiseRace() {}
+function getBanksInBrasil() {
+  fetchBanksInBrazil()
+    .then((data) => createBankList(data))
+    .catch((err) => console.error(err));
+}
+
+function getCep() {
+  fetchCep('88101420')
+    .then((res) => console.log(res))
+    .catch((err) => console.error(err));
+}
+
+function delayPromise() {
+  lazyPromise.then((res) => console.log(res, 'Concluí'));
+
+  console.log('vou ser chamado primeiro');
+}
+
+function promiseAll() {
+  Promise.all([myPromise, lazyPromise])
+    .then((res) => console.log(res))
+    .catch((err) => console.error(err))
+    .finally(() => console.log('Finalizei a promessa'));
+}
+
+function promiseRace() {
+  Promise.race([fastPromise, lazyPromise])
+    .then((res) => console.log('O vencedor é:', res))
+    .catch((err) => console.error(err))
+    .finally(() => console.log('Finalizei a promessa'));
+}
