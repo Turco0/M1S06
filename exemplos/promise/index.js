@@ -7,6 +7,38 @@ function createBankList(banks) {
   });
 }
 
+
+const primeiraPromise = new Promise((resolve, reject) => {
+const a = true;
+
+if (a) {
+  resolve("a")
+}else{
+  reject("Não a")
+}
+})
+
+const segundaPromise = new Promise((resolve, reject) => {
+  const b = true;
+  if (b) {
+    resolve("b")
+  }else{
+    reject("Não b")
+  }
+
+})
+
+const terceiraPromise = new Promise((resolve, reject) => {
+  const c = true;
+
+  if (c) {
+    resolve("c")
+  }else{
+    reject("Não c")
+  }
+})
+
+
 // ---------------------------
 // Criando uma promessa
 const successPromise = () => {};
@@ -28,6 +60,11 @@ function getCep() {}
 
 function errorPromise() {}
 
-function promiseAll() {}
+function promiseAll() {
+  Promise.all([primeiraPromise, segundaPromise, terceiraPromise])
+  .then((resolve)=>{console.log(resolve)})
+  .catch((reject)=>{console.error(reject)})
+  .finally(()=>{console.log("Finalizou")})
+}
 
 function promiseRace() {}
