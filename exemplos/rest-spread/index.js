@@ -145,3 +145,44 @@ const somaTodos = (inicial, ...numeros) =>
 
 // chamada da função
 const somaTodosResult = somaTodos(4, 2, 3, 1, 8); // 18
+
+
+function somarNumeros(...args) {
+return args.filter((item)=>typeof item === 'number' ).reduce((acum, n) => acum + n, 0);
+}
+
+console.log(somarNumeros(1, 2, 3, "a", "b", 8,'dez'));
+
+
+function quantidadeItens(...args) {
+  return console.log(args.length);
+}
+
+quantidadeItens(1, 2, 3, "a", "b", 8,'dez');
+
+let pc={
+  processador: "Core i5",
+  ram: "16GB"
+}
+let pc2={
+  processador: "Core i3"
+}
+
+let pc3={
+  storage: "250GB",
+  processador:"hizen 7"
+}
+
+let pcteste={...pc,...pc2}
+let pcteste2={...pc3,...pc}
+console.log(pcteste2);
+
+console.log(pc);
+
+pc={...pc, processador: "Core i7",storage:"1TB"}
+
+console.log(pc);
+
+let numeros = [1, 2, 3, 4, 5, 6]
+console.log(numeros)
+console.log(Math.max(...numeros))
