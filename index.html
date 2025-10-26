@@ -1,25 +1,1009 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>M1S06</title>
-    <link rel="stylesheet" href="/index.css" />
-  </head>
-  <body>
-    <div id="page-wrapper">
-      <h1>Bem vindo aos exemplos da semana!</h1>
-      <h3 id="page-subtitle">Módulo 1 - Semana 6</h3>
-      <p id="text">Use os botões para acessar os exemplos de cada aula</p>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Pixel Navigator - 25x25</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #0a0a2a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Courier New', monospace;
+            color: #00ff88;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+        
+        #gameContainer {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            background: #1a1a4a;
+            padding: 15px;
+            border: 4px solid #4a4a8a;
+            border-image: 
+                linear-gradient(45deg, #4a4a8a, #8ab4f8, #4a4a8a) 1;
+        }
+        
+        #gameCanvas {
+            border: 4px solid #4a4a8a;
+            background: #000428;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+        
+        #infoPanel {
+            color: #8ab4f8;
+            margin-top: 10px;
+            font-size: 14px;
+            text-align: center;
+            font-weight: bold;
+            text-shadow: 2px 2px 0px #000;
+        }
+        
+        .controls {
+            color: #8ab4f8;
+            margin-top: 8px;
+            font-size: 12px;
+            text-align: center;
+            text-shadow: 1px 1px 0px #000;
+        }
+        
+        .turnIndicator {
+            color: #00ff88;
+            margin-top: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 2px 2px 0px #000, 0 0 8px #00ff88;
+            font-family: 'Press Start 2P', cursive;
+        }
+        
+        #sidePanel {
+            width: 250px;
+        }
+        
+        .stats-container {
+            background: #1a1a4a;
+            padding: 12px;
+            border: 3px solid #4a4a8a;
+            margin-bottom: 15px;
+            box-shadow: 4px 4px 0px #000;
+        }
+        
+        .mission-title {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #00ff88;
+            font-weight: bold;
+            font-size: 14px;
+            text-shadow: 2px 2px 0px #000;
+            font-family: 'Press Start 2P', cursive;
+            border-bottom: 2px solid #4a4a8a;
+            padding-bottom: 5px;
+        }
+        
+        .mission-message {
+            font-size: 11px;
+            line-height: 1.3;
+            text-align: center;
+            color: #8ab4f8;
+            padding: 8px;
+            background: #0a0a2a;
+            border: 2px solid #4a4a8a;
+            text-shadow: 1px 1px 0px #000;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 6px 0;
+            padding: 6px;
+            background: #0a0a2a;
+            border: 2px solid #4a4a8a;
+            font-size: 11px;
+        }
+        
+        .stat-value {
+            color: #00ff88;
+            font-weight: bold;
+            text-shadow: 1px 1px 0px #000;
+        }
+        
+        .warning {
+            color: #ff4444 !important;
+            text-shadow: 1px 1px 0px #000 !important;
+            animation: pixelPulse 0.5s infinite;
+        }
+        
+        @keyframes pixelPulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+        
+        .navigation-container {
+            background: #1a1a4a;
+            padding: 12px;
+            border: 3px solid #4a4a8a;
+            margin-top: 15px;
+            box-shadow: 4px 4px 0px #000;
+        }
+        
+        .chart-container {
+            margin-bottom: 15px;
+        }
+        
+        .chart-title {
+            text-align: center;
+            margin-bottom: 5px;
+            color: #8ab4f8;
+            font-size: 10px;
+            text-shadow: 1px 1px 0px #000;
+        }
+        
+        .chart {
+            width: 100%;
+            height: 80px;
+            background: #0a0a2a;
+            border: 2px solid #4a4a8a;
+            margin-bottom: 8px;
+            image-rendering: pixelated;
+        }
+        
+        .direction-legend {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 5px;
+            font-size: 9px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .legend-color {
+            width: 8px;
+            height: 8px;
+            border: 1px solid #4a4a8a;
+        }
+        
+        /* Pixel art font */
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div>
+            <canvas id="gameCanvas" width="600" height="600"></canvas>
+            <div class="turnIndicator" id="turnIndicator">⚡ MANOBRAS ATIVAS</div>
+            <div id="infoPanel">
+                POS: (<span id="horizontalPosition">0</span>, <span id="verticalPosition">0</span>) | 
+                TURNO: <span id="turn">1</span> |
+                ESCUDOS: <span id="shields">100%</span>
+            </div>
+            <div class="controls">
+                SETAS ←→↑↓ PARA NAVEGAR 25x25<br>
+                "CAMPO EXPANDIDO - SOBREVIVÊNCIA CÓSMICA"
+            </div>
+        </div>
+        
+        <div id="sidePanel">
+            <div class="stats-container">
+                <div class="mission-title">📡 TELEMETRIA</div>
+                <div class="stat-item">
+                    <span>TURNOS:</span>
+                    <span class="stat-value" id="turnsSurvived">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>PRECISÃO:</span>
+                    <span class="stat-value" id="flightAccuracy">100%</span>
+                </div>
+                <div class="stat-item">
+                    <span>MANOBRAS:</span>
+                    <span class="stat-value" id="successfulManeuvers">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>INTEGRIDADE:</span>
+                    <span class="stat-value" id="shipIntegrity">100%</span>
+                </div>
+                <div class="stat-item">
+                    <span>METEOROS:</span>
+                    <span class="stat-value" id="meteorsCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>DENSIDADE:</span>
+                    <span class="stat-value" id="fieldDensity">0%</span>
+                </div>
+            </div>
 
-      <div id="buttons-wrapper">
-        <a href="/exemplos/promise" id="page-link">Aula 1 - Promises</a>
-        <a href="/exemplos/async-await" id="page-link">Aula 2 - Async/Await</a>
-        <a href="/exemplos/rest-spread/" id="page-link"
-          >Aula 3 - Operadores Rest e Spread</a
-        >
-      </div>
+            <div class="navigation-container">
+                <div class="mission-title">🧭 ANÁLISE DE TRAJETÓRIA</div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">DESLOCAMENTO TOTAL POR DIREÇÃO</div>
+                    <div class="chart" id="distanceChart"></div>
+                    <div class="mission-message" id="distanceInfo">
+                        DISTÂNCIA: 0<br>
+                        MOVIMENTOS: 0
+                    </div>
+                    <div class="direction-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ff4444;"></div>
+                            <span>ESQUERDA</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #44ff44;"></div>
+                            <span>DIREITA</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #4444ff;"></div>
+                            <span>CIMA</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ffff44;"></div>
+                            <span>BAIXO</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">VETOR RESULTANTE</div>
+                    <div class="chart" id="vectorChart"></div>
+                    <div class="mission-message" id="vectorInfo">
+                        VETOR: (0, 0)<br>
+                        MAGNITUDE: 0
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </body>
+
+    <script>
+        class CosmicPixelNavigator {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.ctx.imageSmoothingEnabled = false;
+                
+                // Configurações do jogo - MAPA 25x25
+                this.horizontalPosition = 0;
+                this.verticalPosition = 0;
+                this.turn = 1;
+                this.playerTurn = true;
+                this.arenaSize = 25;
+                this.maxObstaclePercentage = 0.3;
+                this.maxMeteors = Math.floor(25 * 25 * this.maxObstaclePercentage);
+                
+                // Estatísticas
+                this.turnsSurvived = 0;
+                this.successfulManeuvers = 0;
+                this.shipIntegrity = 100;
+                this.gameActive = true;
+                
+                // Histórico de movimento para gráficos
+                this.movementHistory = [];
+                this.totalDistance = 0;
+                this.totalMovements = 0;
+                
+                // Contadores por direção
+                this.directionStats = {
+                    left: { distance: 0, count: 0, color: '#ff4444' },
+                    right: { distance: 0, count: 0, color: '#44ff44' },
+                    up: { distance: 0, count: 0, color: '#4444ff' },
+                    down: { distance: 0, count: 0, color: '#ffff44' }
+                };
+                
+                // Meteoros
+                this.meteors = [];
+                this.initialMeteorCount = 15;
+                
+                // Nave do jogador
+                this.ship = {
+                    x: this.canvas.width / 2,
+                    y: this.canvas.height / 2,
+                    size: 12,
+                    thrust: 0,
+                    direction: 0
+                };
+                
+                // Controles
+                this.keys = {};
+                this.keyCooldown = 0;
+                this.moveMade = false;
+                this.stars = this.generateStars(120);
+                
+                this.setupEventListeners();
+                this.initializeMeteors();
+                this.gameLoop();
+                this.updateCharts();
+            }
+            
+            generateStars(count) {
+                const stars = [];
+                for (let i = 0; i < count; i++) {
+                    stars.push({
+                        x: Math.floor(Math.random() * this.canvas.width),
+                        y: Math.floor(Math.random() * this.canvas.height),
+                        size: Math.floor(Math.random() * 2) + 1,
+                        brightness: Math.random() > 0.5 ? 1 : 0.6
+                    });
+                }
+                return stars;
+            }
+            
+            initializeMeteors() {
+                this.meteors = [];
+                
+                for (let i = 0; i < this.initialMeteorCount; i++) {
+                    this.addMeteor();
+                }
+            }
+            
+            addMeteor() {
+                if (this.meteors.length >= this.maxMeteors) return false;
+                
+                let hPos, vPos;
+                let attempts = 0;
+                const maxAttempts = 100;
+                
+                do {
+                    hPos = Math.floor(Math.random() * 25) - 12;
+                    vPos = Math.floor(Math.random() * 25) - 12;
+                    attempts++;
+                } while (
+                    (this.isPositionOccupied(hPos, vPos) || 
+                     (hPos === 0 && vPos === 0)) && 
+                    attempts < maxAttempts
+                );
+                
+                if (attempts >= maxAttempts) return false;
+                
+                const meteorSize = 4 + Math.floor(Math.random() * 8);
+                const meteor = {
+                    horizontal: hPos,
+                    vertical: vPos,
+                    x: 0,
+                    y: 0,
+                    size: meteorSize,
+                    type: Math.random() > 0.5 ? 'rock' : 'ice',
+                    isSmall: meteorSize < 8,
+                    speed: meteorSize < 8 ? 1.0 : 0.4
+                };
+                
+                this.updateMeteorPosition(meteor);
+                this.meteors.push(meteor);
+                return true;
+            }
+            
+            isPositionOccupied(hPos, vPos) {
+                return this.meteors.some(meteor => 
+                    meteor.horizontal === hPos && meteor.vertical === vPos
+                );
+            }
+            
+            updateMeteorPosition(meteor) {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const cellSize = 20;
+                
+                meteor.x = centerX + (meteor.horizontal * cellSize);
+                meteor.y = centerY + (meteor.vertical * cellSize);
+            }
+            
+            updateShipPosition() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const cellSize = 20;
+                
+                this.ship.x = centerX + (this.horizontalPosition * cellSize);
+                this.ship.y = centerY + (this.verticalPosition * cellSize);
+            }
+            
+            setupEventListeners() {
+                document.addEventListener('keydown', (e) => {
+                    if (!this.gameActive) return;
+                    if (e.key in this.keys) {
+                        e.preventDefault();
+                    }
+                    this.keys[e.key] = true;
+                    
+                    if (e.key === 'ArrowLeft') this.ship.direction = 1;
+                    if (e.key === 'ArrowRight') this.ship.direction = 2;
+                    if (e.key === 'ArrowUp') this.ship.direction = 3;
+                    if (e.key === 'ArrowDown') this.ship.direction = 4;
+                });
+                
+                document.addEventListener('keyup', (e) => {
+                    this.keys[e.key] = false;
+                    if (!this.keys['ArrowLeft'] && !this.keys['ArrowRight'] && 
+                        !this.keys['ArrowUp'] && !this.keys['ArrowDown']) {
+                        this.ship.direction = 0;
+                    }
+                });
+            }
+            
+            updatePosition(newHorizontal, newVertical) {
+                if (!this.gameActive || !this.playerTurn || this.moveMade) return;
+                
+                // Limites do mapa 25x25 (-12 a 12)
+                newHorizontal = Math.max(-12, Math.min(12, newHorizontal));
+                newVertical = Math.max(-12, Math.min(12, newVertical));
+                
+                // Calcular deslocamento e direção
+                const deltaX = newHorizontal - this.horizontalPosition;
+                const deltaY = newVertical - this.verticalPosition;
+                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                
+                if (distance > 0) {
+                    this.totalDistance += distance;
+                    this.totalMovements++;
+                    
+                    // Determinar direção principal
+                    let direction = '';
+                    let directionColor = '';
+                    
+                    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                        // Movimento horizontal predominante
+                        if (deltaX < 0) {
+                            direction = 'left';
+                            directionColor = '#ff4444'; // Vermelho
+                        } else {
+                            direction = 'right';
+                            directionColor = '#44ff44'; // Verde
+                        }
+                    } else {
+                        // Movimento vertical predominante
+                        if (deltaY < 0) {
+                            direction = 'up';
+                            directionColor = '#4444ff'; // Azul
+                        } else {
+                            direction = 'down';
+                            directionColor = '#ffff44'; // Amarelo
+                        }
+                    }
+                    
+                    // Atualizar estatísticas da direção
+                    this.directionStats[direction].distance += distance;
+                    this.directionStats[direction].count++;
+                    
+                    this.movementHistory.push({
+                        x: newHorizontal,
+                        y: newVertical,
+                        distance: distance,
+                        direction: direction,
+                        color: directionColor
+                    });
+                    
+                    // Manter apenas os últimos 20 movimentos
+                    if (this.movementHistory.length > 20) {
+                        this.movementHistory.shift();
+                    }
+                }
+                
+                this.horizontalPosition = newHorizontal;
+                this.verticalPosition = newVertical;
+                this.moveMade = true;
+                
+                this.ship.thrust = 1;
+                this.updateShipPosition();
+                
+                if (!this.wouldCollide(newHorizontal, newVertical)) {
+                    this.successfulManeuvers++;
+                }
+                
+                setTimeout(() => this.processTurn(), 300);
+            }
+            
+            wouldCollide(hPos, vPos) {
+                return this.meteors.some(meteor => 
+                    meteor.horizontal === hPos && meteor.vertical === vPos
+                );
+            }
+            
+            processTurn() {
+                if (!this.gameActive) return;
+                
+                this.moveMeteors();
+                this.checkMeteorCollisions();
+                
+                // Mais chance de aparecer meteoros no mapa maior
+                if (Math.random() < 0.15 && this.meteors.length < this.maxMeteors) {
+                    this.addMeteor();
+                }
+                
+                if (this.checkShipCollision()) {
+                    this.shipDamaged();
+                    if (!this.gameActive) return;
+                }
+                
+                this.turnsSurvived++;
+                this.updateShipIntegrity();
+                this.updateStats();
+                this.updateCharts();
+                
+                if (this.shipIntegrity <= 0) {
+                    this.gameOver();
+                    return;
+                }
+                
+                this.turn++;
+                this.playerTurn = true;
+                this.moveMade = false;
+                this.ship.thrust = 0;
+                
+                this.updateUI();
+            }
+            
+            moveMeteors() {
+                this.meteors.forEach(meteor => {
+                    const shouldMove = meteor.isSmall ? true : (Math.random() < 0.4);
+                    
+                    if (shouldMove) {
+                        const directions = [
+                            {h: -1, v: 0}, {h: 1, v: 0}, {h: 0, v: -1}, {h: 0, v: 1},
+                            {h: -1, v: -1}, {h: 1, v: -1}, {h: -1, v: 1}, {h: 1, v: 1}
+                        ];
+                        const move = directions[Math.floor(Math.random() * directions.length)];
+                        
+                        const newH = Math.max(-12, Math.min(12, meteor.horizontal + move.h));
+                        const newV = Math.max(-12, Math.min(12, meteor.vertical + move.v));
+                        
+                        if (!this.isPositionOccupied(newH, newV) && 
+                            !(newH === this.horizontalPosition && newV === this.verticalPosition)) {
+                            meteor.horizontal = newH;
+                            meteor.vertical = newV;
+                            this.updateMeteorPosition(meteor);
+                        }
+                    }
+                });
+            }
+            
+            checkMeteorCollisions() {
+                for (let i = 0; i < this.meteors.length; i++) {
+                    for (let j = i + 1; j < this.meteors.length; j++) {
+                        const m1 = this.meteors[i];
+                        const m2 = this.meteors[j];
+                        
+                        if (m1.horizontal === m2.horizontal && m1.vertical === m2.vertical) {
+                            this.meteors.splice(j, 1);
+                            this.meteors.splice(i, 1);
+                            return;
+                        }
+                    }
+                }
+            }
+            
+            checkShipCollision() {
+                return this.meteors.some(meteor => 
+                    meteor.horizontal === this.horizontalPosition && 
+                    meteor.vertical === this.verticalPosition
+                );
+            }
+            
+            shipDamaged() {
+                this.shipIntegrity -= 20;
+                
+                this.meteors = this.meteors.filter(meteor => 
+                    !(meteor.horizontal === this.horizontalPosition && 
+                      meteor.vertical === this.verticalPosition)
+                );
+                
+                if (this.shipIntegrity <= 0) {
+                    this.gameOver();
+                } else {
+                    this.updateStats();
+                }
+            }
+            
+            updateShipIntegrity() {
+                this.shipIntegrity = Math.max(0, this.shipIntegrity - 0.2);
+            }
+            
+            updateStats() {
+                const accuracy = this.turnsSurvived > 0 ? 
+                    (this.successfulManeuvers / this.turnsSurvived) * 100 : 100;
+                const density = (this.meteors.length / (25 * 25)) * 100;
+                
+                document.getElementById('turnsSurvived').textContent = this.turnsSurvived;
+                document.getElementById('flightAccuracy').textContent = Math.floor(accuracy) + '%';
+                document.getElementById('successfulManeuvers').textContent = this.successfulManeuvers;
+                
+                const integrityElement = document.getElementById('shipIntegrity');
+                integrityElement.textContent = Math.floor(this.shipIntegrity) + '%';
+                if (this.shipIntegrity < 30) {
+                    integrityElement.className = 'stat-value warning';
+                } else {
+                    integrityElement.className = 'stat-value';
+                }
+                
+                const shieldsElement = document.getElementById('shields');
+                shieldsElement.textContent = Math.floor(this.shipIntegrity) + '%';
+                if (this.shipIntegrity < 30) {
+                    shieldsElement.className = 'warning';
+                }
+                
+                document.getElementById('meteorsCount').textContent = this.meteors.length;
+                document.getElementById('fieldDensity').textContent = density.toFixed(1) + '%';
+            }
+            
+            updateCharts() {
+                this.drawDistanceChart();
+                this.drawVectorChart();
+            }
+            
+            drawDistanceChart() {
+                const chart = document.getElementById('distanceChart');
+                chart.innerHTML = '';
+                
+                const width = chart.clientWidth;
+                const height = chart.clientHeight;
+                
+                const chartCanvas = document.createElement('canvas');
+                chartCanvas.width = width;
+                chartCanvas.height = height;
+                chartCanvas.style.imageRendering = 'pixelated';
+                const ctx = chartCanvas.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                
+                // Fundo
+                ctx.fillStyle = '#0a0a2a';
+                ctx.fillRect(0, 0, width, height);
+                
+                // Borda
+                ctx.strokeStyle = '#4a4a8a';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(0, 0, width, height);
+                
+                // Grade horizontal
+                ctx.strokeStyle = '#4a4a8a';
+                ctx.lineWidth = 1;
+                for (let i = 1; i <= 4; i++) {
+                    const y = height * i / 5;
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
+                }
+                
+                // Gráfico de deslocamento com cores por direção
+                if (this.movementHistory.length > 0) {
+                    const maxDistance = Math.max(...this.movementHistory.map(m => m.distance), 1);
+                    const barWidth = width / this.movementHistory.length;
+                    
+                    this.movementHistory.forEach((move, index) => {
+                        const barHeight = (move.distance / maxDistance) * (height - 10);
+                        const x = index * barWidth;
+                        const y = height - barHeight;
+                        
+                        // Usar a cor da direção
+                        ctx.fillStyle = move.color;
+                        ctx.fillRect(x, y, barWidth - 1, barHeight);
+                    });
+                }
+                
+                // Texto informativo
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '8px Courier New';
+                ctx.fillText('DIST', 2, 8);
+                
+                chart.appendChild(chartCanvas);
+                
+                // Atualizar informações com estatísticas por direção
+                const dirInfo = `
+                    DIST: ${this.totalDistance.toFixed(1)}<br>
+                    MOVS: ${this.totalMovements}<br>
+                    ←${this.directionStats.left.count} →${this.directionStats.right.count}<br>
+                    ↑${this.directionStats.up.count} ↓${this.directionStats.down.count}
+                `;
+                document.getElementById('distanceInfo').innerHTML = dirInfo;
+            }
+            
+            drawVectorChart() {
+                const chart = document.getElementById('vectorChart');
+                chart.innerHTML = '';
+                
+                const width = chart.clientWidth;
+                const height = chart.clientHeight;
+                
+                const chartCanvas = document.createElement('canvas');
+                chartCanvas.width = width;
+                chartCanvas.height = height;
+                chartCanvas.style.imageRendering = 'pixelated';
+                const ctx = chartCanvas.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                
+                // Fundo
+                ctx.fillStyle = '#0a0a2a';
+                ctx.fillRect(0, 0, width, height);
+                
+                // Borda
+                ctx.strokeStyle = '#4a4a8a';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(0, 0, width, height);
+                
+                // Eixos coordenados
+                ctx.strokeStyle = '#4a4a8a';
+                ctx.lineWidth = 1;
+                
+                // Eixo X
+                ctx.beginPath();
+                ctx.moveTo(0, height / 2);
+                ctx.lineTo(width, height / 2);
+                ctx.stroke();
+                
+                // Eixo Y
+                ctx.beginPath();
+                ctx.moveTo(width / 2, 0);
+                ctx.lineTo(width / 2, height);
+                ctx.stroke();
+                
+                // Vetor resultante (da origem até a posição atual)
+                const scale = 3;
+                const centerX = width / 2;
+                const centerY = height / 2;
+                const endX = centerX + (this.horizontalPosition * scale);
+                const endY = centerY + (this.verticalPosition * scale);
+                
+                // Desenhar vetor
+                if (this.horizontalPosition !== 0 || this.verticalPosition !== 0) {
+                    ctx.strokeStyle = '#ff4444';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, centerY);
+                    ctx.lineTo(endX, endY);
+                    ctx.stroke();
+                    
+                    // Cabeça da seta
+                    const angle = Math.atan2(this.verticalPosition, this.horizontalPosition);
+                    const arrowSize = 3;
+                    
+                    ctx.fillStyle = '#ff4444';
+                    ctx.beginPath();
+                    ctx.moveTo(endX, endY);
+                    ctx.lineTo(
+                        endX - arrowSize * Math.cos(angle - Math.PI / 6),
+                        endY - arrowSize * Math.sin(angle - Math.PI / 6)
+                    );
+                    ctx.lineTo(
+                        endX - arrowSize * Math.cos(angle + Math.PI / 6),
+                        endY - arrowSize * Math.sin(angle + Math.PI / 6)
+                    );
+                    ctx.closePath();
+                    ctx.fill();
+                }
+                
+                // Ponto da origem
+                ctx.fillStyle = '#00ff88';
+                ctx.fillRect(centerX - 1, centerY - 1, 3, 3);
+                
+                // Texto informativo
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '8px Courier New';
+                ctx.fillText('VET', 2, 8);
+                
+                chart.appendChild(chartCanvas);
+                
+                // Calcular magnitude do vetor
+                const magnitude = Math.sqrt(
+                    this.horizontalPosition * this.horizontalPosition + 
+                    this.verticalPosition * this.verticalPosition
+                );
+                
+                document.getElementById('vectorInfo').innerHTML = 
+                    `VET: (${this.horizontalPosition}, ${this.verticalPosition})<br>MAG: ${magnitude.toFixed(1)}`;
+            }
+            
+            gameOver() {
+                this.gameActive = false;
+                const score = this.turnsSurvived * this.successfulManeuvers;
+                setTimeout(() => {
+                    alert(`💥 MISSÃO FALHADA\n\nTURNOS: ${this.turnsSurvived}\nMANOBRAS: ${this.successfulManeuvers}\nESCUDOS: ${Math.floor(this.shipIntegrity)}%\nPONTUAÇÃO: ${score}\n\nF5 PARA RECOMEÇAR`);
+                }, 500);
+            }
+            
+            update() {
+                if (!this.gameActive) return;
+                
+                if (this.playerTurn && !this.moveMade && this.keyCooldown === 0) {
+                    if (this.keys['ArrowLeft']) {
+                        this.updatePosition(this.horizontalPosition - 1, this.verticalPosition);
+                        this.keyCooldown = 6;
+                    }
+                    if (this.keys['ArrowRight']) {
+                        this.updatePosition(this.horizontalPosition + 1, this.verticalPosition);
+                        this.keyCooldown = 6;
+                    }
+                    if (this.keys['ArrowUp']) {
+                        this.updatePosition(this.horizontalPosition, this.verticalPosition - 1);
+                        this.keyCooldown = 6;
+                    }
+                    if (this.keys['ArrowDown']) {
+                        this.updatePosition(this.horizontalPosition, this.verticalPosition + 1);
+                        this.keyCooldown = 6;
+                    }
+                }
+                
+                if (this.keyCooldown > 0) {
+                    this.keyCooldown--;
+                }
+                
+                if (this.ship.thrust > 0) {
+                    this.ship.thrust -= 0.2;
+                }
+                
+                this.updateUI();
+            }
+            
+            draw() {
+                this.drawSpaceBackground();
+                this.drawSpaceGrid();
+                this.drawMeteors();
+                this.drawShip();
+                this.drawEffects();
+            }
+            
+            drawSpaceBackground() {
+                this.ctx.fillStyle = '#000428';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.stars.forEach(star => {
+                    this.ctx.fillStyle = star.brightness === 1 ? '#ffffff' : '#8ab4f8';
+                    this.ctx.fillRect(
+                        Math.floor(star.x), 
+                        Math.floor(star.y), 
+                        star.size, 
+                        star.size
+                    );
+                });
+            }
+            
+            drawSpaceGrid() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const cellSize = 20;
+                
+                this.ctx.strokeStyle = 'rgba(74, 74, 138, 0.3)';
+                this.ctx.lineWidth = 1;
+                
+                for (let i = -12; i <= 12; i += 3) {
+                    const x = Math.floor(centerX + (i * cellSize));
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(x, Math.floor(centerY - 12 * cellSize));
+                    this.ctx.lineTo(x, Math.floor(centerY + 12 * cellSize));
+                    this.ctx.stroke();
+                }
+                
+                for (let i = -12; i <= 12; i += 3) {
+                    const y = Math.floor(centerY + (i * cellSize));
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(Math.floor(centerX - 12 * cellSize), y);
+                    this.ctx.lineTo(Math.floor(centerX + 12 * cellSize), y);
+                    this.ctx.stroke();
+                }
+            }
+            
+            drawShip() {
+                const x = Math.floor(this.ship.x);
+                const y = Math.floor(this.ship.y);
+                const size = this.ship.size;
+                
+                this.ctx.fillStyle = '#8ab4f8';
+                this.ctx.fillRect(x - 3, y - 4, 6, 8);
+                this.ctx.fillRect(x - 6, y - 1, 3, 4);
+                this.ctx.fillRect(x + 3, y - 1, 3, 4);
+                this.ctx.fillRect(x - 2, y + 4, 4, 3);
+                
+                this.ctx.fillStyle = '#00ff88';
+                this.ctx.fillRect(x - 1, y - 3, 2, 2);
+                
+                this.ctx.fillStyle = '#6b8cff';
+                this.ctx.fillRect(x - 2, y - 1, 1, 1);
+                this.ctx.fillRect(x + 1, y - 1, 1, 1);
+                
+                if (this.ship.thrust > 0) {
+                    this.ctx.fillStyle = '#ff4444';
+                    const thrustHeight = Math.floor(4 * this.ship.thrust);
+                    this.ctx.fillRect(x - 1, y + 7, 2, thrustHeight);
+                    
+                    if (this.ship.direction === 1) {
+                        this.ctx.fillRect(x - 6, y, 1, thrustHeight/2);
+                    } else if (this.ship.direction === 2) {
+                        this.ctx.fillRect(x + 5, y, 1, thrustHeight/2);
+                    } else if (this.ship.direction === 3) {
+                        this.ctx.fillRect(x - 1, y - 7, 2, thrustHeight/2);
+                    } else if (this.ship.direction === 4) {
+                        this.ctx.fillRect(x - 1, y + 7, 2, thrustHeight);
+                    }
+                }
+                
+                if (this.shipIntegrity < 50) {
+                    this.ctx.strokeStyle = this.shipIntegrity < 30 ? '#ff4444' : '#ffff00';
+                    this.ctx.lineWidth = 1;
+                    this.ctx.strokeRect(x - 7, y - 5, 14, 12);
+                }
+            }
+            
+            drawMeteors() {
+                this.meteors.forEach(meteor => {
+                    const x = Math.floor(meteor.x);
+                    const y = Math.floor(meteor.y);
+                    
+                    if (meteor.type === 'rock') {
+                        this.ctx.fillStyle = '#8b7355';
+                        this.drawPixelCircle(x, y, meteor.size);
+                    } else {
+                        this.ctx.fillStyle = '#a8d8f8';
+                        this.drawPixelCircle(x, y, meteor.size);
+                        
+                        this.ctx.fillStyle = '#ffffff';
+                        if (meteor.size > 4) {
+                            this.ctx.fillRect(x - 1, y - 1, 1, 1);
+                        }
+                    }
+                });
+            }
+            
+            drawPixelCircle(x, y, size) {
+                const radius = Math.floor(size / 2);
+                for (let dx = -radius; dx <= radius; dx++) {
+                    for (let dy = -radius; dy <= radius; dy++) {
+                        if (dx * dx + dy * dy <= radius * radius) {
+                            this.ctx.fillRect(x + dx, y + dy, 1, 1);
+                        }
+                    }
+                }
+            }
+            
+            drawEffects() {
+                this.ctx.fillStyle = 'rgba(138, 43, 226, 0.2)';
+                for (let i = 0; i < 15; i++) {
+                    const px = Math.floor(Math.random() * this.canvas.width);
+                    const py = Math.floor(Math.random() * this.canvas.height);
+                    this.ctx.fillRect(px, py, 1, 1);
+                }
+            }
+            
+            updateUI() {
+                document.getElementById('horizontalPosition').textContent = this.horizontalPosition;
+                document.getElementById('verticalPosition').textContent = this.verticalPosition;
+                document.getElementById('turn').textContent = this.turn;
+                
+                const turnIndicator = document.getElementById('turnIndicator');
+                if (!this.gameActive) {
+                    turnIndicator.textContent = '💥 FALHA NA MISSÃO';
+                    turnIndicator.style.color = '#ff4444';
+                } else if (this.playerTurn && !this.moveMade) {
+                    turnIndicator.textContent = '⚡ MANOBRAS ATIVAS';
+                    turnIndicator.style.color = '#00ff88';
+                } else if (this.playerTurn && this.moveMade) {
+                    turnIndicator.textContent = '📡 CALCULANDO...';
+                    turnIndicator.style.color = '#8ab4f8';
+                } else {
+                    turnIndicator.textContent = '☄️ METEOROS...';
+                    turnIndicator.style.color = '#ff8844';
+                }
+            }
+            
+            gameLoop() {
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.gameLoop());
+            }
+        }
+        
+        window.addEventListener('load', () => {
+            new CosmicPixelNavigator();
+        });
+    </script>
+</body>
 </html>
